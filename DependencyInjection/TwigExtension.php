@@ -1,29 +1,38 @@
 <?php
 /**
- * Platinum Pixs
+ * Copyright 2014 Platinum Pixs, LLC. All Rights Reserved.
  *
- * @copyright  Copyright (c) 2010-2014, Platinum Pixs, LLC All rights reserved.
- * @link       http://www.platinumpixs.com
+ * Licensed under the Apache License, Version 2.0 (the "License").
+ * You may not use this file except in compliance with the License.
+ * A copy of the License is located at
+ *
+ * http://aws.amazon.com/apache2.0
+ *
+ * or in the "license" file accompanying this file. This file is distributed
+ * on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
  */
 
 namespace PlatinumPixs\SimplePagination\DependencyInjection;
 
-/**
- * XXX
- *
- * @copyright  Copyright (c) 2010-2014, Platinum Pixs, LLC All rights reserved.
- * @link       http://www.platinumpixs.com
- */
+use PlatinumPixs\SimplePagination\Paginator;
+
 class TwigExtension extends \Twig_Extension
 {
     /**
      * @var \Twig_Environment
      */
     protected $environment;
+
     /**
      * @var \Twig_Template
      */
     protected $template;
+
+    /**
+     * @var string
+     */
     protected $theme;
 
     /**
@@ -55,9 +64,14 @@ class TwigExtension extends \Twig_Extension
         );
     }
 
-    public function getPagination($grid)
+    public function setPaginationPath(Paginator $paginator, $pageNumber)
     {
-        return $this->renderBlock('pagination', array('grid' => $grid));
+        return $paginator->createUrl($_SERVER['REQUEST_URI'], $pageNumber);
+    }
+
+    public function getPagination(Paginator $paginator)
+    {
+        return $this->renderBlock('pagination', array('paginator' => $paginator));
     }
 
     /**
@@ -69,10 +83,10 @@ class TwigExtension extends \Twig_Extension
      */
     private function renderBlock($name, $parameters)
     {
-        //load template if needed
+        // load template if needed
         if (is_null($this->template))
         {
-            //get template name
+            // get template name
             if(is_null($this->theme))
             {
                 $this->theme = 'PlatinumPixsSimplePaginationBundle::blocks.html.twig';
