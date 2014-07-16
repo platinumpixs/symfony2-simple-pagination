@@ -59,8 +59,9 @@ class TwigExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('grid_set_pagination_path', array($this, 'setPaginationPath')),
-            new \Twig_SimpleFunction('platinum_pixs_simple_pagination', array($this, 'getPagination'), array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('platinum_pixs_simple_pagination_path', array($this, 'setPaginationPath')),
+            new \Twig_SimpleFunction('platinum_pixs_simple_pagination', array($this, 'getPagination'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('platinum_pixs_simple_pagination_count', array($this, 'getDisplaying'), array('is_safe' => array('html')))
         );
     }
 
@@ -72,6 +73,11 @@ class TwigExtension extends \Twig_Extension
     public function getPagination(Paginator $paginator)
     {
         return $this->renderBlock('pagination', array('paginator' => $paginator));
+    }
+
+    public function getDisplaying(Paginator $paginator)
+    {
+        return $this->renderBlock('displaying', array('paginator' => $paginator));
     }
 
     /**

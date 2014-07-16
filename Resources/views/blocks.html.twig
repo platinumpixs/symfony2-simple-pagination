@@ -3,22 +3,30 @@
     {% spaceless %}
         <ul class="pagination pull-right">
             <li class="prev{% if paginator.getCurrentPage == 1 %} disabled{% endif %}">
-                <a href="{% if paginator.getCurrentPage != 1 %}{{ grid_set_pagination_path(paginator, paginator.getCurrentPage - 1) }}{% else %}#{% endif %}">&larr; Previous</a>
+                <a href="{% if paginator.getCurrentPage != 1 %}{{ platinum_pixs_simple_pagination_path(paginator, paginator.getCurrentPage - 1) }}{% else %}#{% endif %}">&larr; Previous</a>
             </li>
 
             {% for i in 1..paginator.getNumPages %}
 
                 {% if ( i == 1 or i == paginator.getNumPages or i in paginator.getRange ) %}
                     <li {% if i == paginator.getCurrentPage %}class="active"{% endif %}>
-                        <a href="{{ grid_set_pagination_path(paginator, i) }}">{{ i }}</a>
+                        <a href="{{ platinum_pixs_simple_pagination_path(paginator, i) }}">{{ i }}</a>
                     </li>
                 {% endif %}
 
             {% endfor %}
 
             <li class="next{% if paginator.getCurrentPage == paginator.getNumPages %} disabled{% endif %}">
-                <a href="{% if paginator.getCurrentPage != paginator.getNumPages %}{{ grid_set_pagination_path(paginator, paginator.getCurrentPage + 1) }}{% else %}#{% endif %}">Next &rarr;</a>
+                <a href="{% if paginator.getCurrentPage != paginator.getNumPages %}{{ platinum_pixs_simple_pagination_path(paginator, paginator.getCurrentPage + 1) }}{% else %}#{% endif %}">Next &rarr;</a>
             </li>
+        </ul>
+    {% endspaceless %}
+{% endblock %}
+
+{% block displaying %}
+    {% spaceless %}
+        <ul class="pagination">
+            <li class="disabled"><a href="javascript:void(0);">Displaying: {{ paginator.getCountBeginning }} - {{ paginator.getCountEnd }} of {{ paginator.getItemCount }}</a></li>
         </ul>
     {% endspaceless %}
 {% endblock %}
