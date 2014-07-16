@@ -1,0 +1,24 @@
+
+{% block pagination %}
+    {% spaceless %}
+        <ul class="pagination pull-right">
+            <li class="prev{% if paginator.getCurrentPage == 1 %} disabled{% endif %}">
+                <a href="{% if paginator.getCurrentPage != 1 %}{{ grid_set_pagination_path(paginator, paginator.getCurrentPage - 1) }}{% else %}#{% endif %}">&larr; Previous</a>
+            </li>
+
+            {% for i in 1..paginator.getNumPages %}
+
+                {% if ( i == 1 or i == paginator.getNumPages or i in paginator.getRange ) %}
+                    <li {% if i == paginator.getCurrentPage %}class="active"{% endif %}>
+                        <a href="{{ grid_set_pagination_path(paginator, i) }}">{{ i }}</a>
+                    </li>
+                {% endif %}
+
+            {% endfor %}
+
+            <li class="next{% if paginator.getCurrentPage == paginator.getNumPages %} disabled{% endif %}">
+                <a href="{% if paginator.getCurrentPage != paginator.getNumPages %}{{ grid_set_pagination_path(paginator, paginator.getCurrentPage + 1) }}{% else %}#{% endif %}">Next &rarr;</a>
+            </li>
+        </ul>
+    {% endspaceless %}
+{% endblock %}
