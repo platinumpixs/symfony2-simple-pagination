@@ -159,6 +159,21 @@ class Paginator
     }
 
     /**
+     * Gets the mid range variable, the amount of pages to show in the list
+     *
+     * @return int
+     */
+    public function getMidRange()
+    {
+        if ($this->_midRange < 1)
+        {
+            $this->_midRange = self::DEFAULT_MID_RANGE;
+        }
+
+        return $this->_midRange;
+    }
+
+    /**
      * Gets the current page the user is on
      *
      * @return int
@@ -230,9 +245,10 @@ class Paginator
     {
         $currentPage = $this->getCurrentPage();
         $numPages = $this->getNumPages();
+        $midRange = $this->getMidRange();
 
-        $this->_startRange = $currentPage - floor($this->_midRange / 2);
-        $this->_endRange = $currentPage + floor($this->_midRange / 2);
+        $this->_startRange = $currentPage - floor($midRange / 2);
+        $this->_endRange = $currentPage + floor($midRange / 2);
 
         if ($this->_startRange <= 0)
         {
@@ -245,6 +261,7 @@ class Paginator
             $this->_startRange -= $this->_endRange - $numPages;
             $this->_endRange = $numPages;
         }
+
 
         $this->_range = range($this->_startRange, $this->_endRange);
     }
