@@ -139,6 +139,11 @@ class Paginator
      */
     public function getLimit()
     {
+        if (!is_numeric($this->_limit))
+        {
+            $this->_limit = self::DEFAULT_LIMIT;
+        }
+
         return $this->_limit;
     }
 
