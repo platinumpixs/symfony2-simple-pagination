@@ -21,11 +21,6 @@ use PlatinumPixs\SimplePagination\Paginator;
 class TwigExtension extends \Twig_Extension
 {
     /**
-     * @var \Twig_Environment
-     */
-    protected $environment;
-
-    /**
      * @var \Twig_Template
      */
     protected $template;
@@ -34,14 +29,6 @@ class TwigExtension extends \Twig_Extension
      * @var string
      */
     protected $theme;
-
-    /**
-     * {@inheritdoc}
-     */
-    public function initRuntime(\Twig_Environment $environment)
-    {
-        $this->environment = $environment;
-    }
 
     /**
      * {@inheritdoc}
@@ -60,8 +47,8 @@ class TwigExtension extends \Twig_Extension
     {
         return array(
             new \Twig_SimpleFunction('platinum_pixs_simple_pagination_path', array($this, 'setPaginationPath')),
-            new \Twig_SimpleFunction('platinum_pixs_simple_pagination', array($this, 'getPagination'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('platinum_pixs_simple_pagination_count', array($this, 'getDisplaying'), array('is_safe' => array('html')))
+            new \Twig_SimpleFunction('platinum_pixs_simple_pagination', array($this, 'getPagination'), array('is_safe' => array('html'), 'needs_environment' => true)),
+            new \Twig_SimpleFunction('platinum_pixs_simple_pagination_count', array($this, 'getDisplaying'), array('is_safe' => array('html'), 'needs_environment' => true))
         );
     }
 
@@ -70,24 +57,26 @@ class TwigExtension extends \Twig_Extension
         return $paginator->createUrl($_SERVER['REQUEST_URI'], $pageNumber);
     }
 
-    public function getPagination(Paginator $paginator)
+    public function getPagination(\Twig_Environment $twig, Paginator $paginator)
     {
-        return $this->renderBlock('pagination', array('paginator' => $paginator));
+        return $this->renderBlock($twig, 'pagination', array('paginator' => $paginator));
     }
 
-    public function getDisplaying(Paginator $paginator)
+    public function getDisplaying(\Twig_Environment $twig, Paginator $paginator)
     {
-        return $this->renderBlock('displaying', array('paginator' => $paginator));
+        return $this->renderBlock($twig, 'displaying', array('paginator' => $paginator));
     }
 
     /**
      * Render block.
      *
-     * @param $name string
-     * @param $parameters string
+     * @param \Twig_Environment $twig
+     * @param                   $name
+     * @param                   $parameters
+     *
      * @return string
      */
-    private function renderBlock($name, $parameters)
+    private function renderBlock(\Twig_Environment $twig, $name, $parameters)
     {
         // load template if needed
         if (is_null($this->template))
@@ -98,7 +87,7 @@ class TwigExtension extends \Twig_Extension
                 $this->theme = 'PlatinumPixsSimplePaginationBundle::blocks.html.twig';
             }
 
-            $this->template = $this->environment->loadTemplate($this->theme);
+            $this->template = $twig->loadTemplate($this->theme);
         }
 
         if ($this->template->hasBlock($name))
